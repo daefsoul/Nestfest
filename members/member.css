@@ -1,0 +1,588 @@
+/* =========================================================
+   MEMBER PAGE
+========================================================= */
+
+.member-hero{
+
+  width:100%;
+  max-width:100% !important;
+
+  min-height:75vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  position:relative;
+
+  text-align:center;
+
+  padding:
+    140px 20px 100px !important;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,.82),
+      rgba(0,0,0,.92)
+    ),
+    url('member-bg.jpg')
+    center center/cover no-repeat;
+
+}
+
+.back-btn{
+
+  position:absolute;
+
+  top:130px;
+  left:60px;
+
+  color:#fff;
+
+  text-decoration:none;
+
+  font-size:12px;
+
+  letter-spacing:3px;
+
+  transition:.3s;
+
+}
+
+.back-btn:hover{
+  color:var(--primary);
+}
+
+.member-name{
+
+  font-size:clamp(70px,10vw,160px);
+
+  font-weight:800;
+
+  line-height:.9;
+
+  letter-spacing:2px;
+
+}
+
+.member-name span{
+  color:var(--primary);
+}
+
+.member-alias{
+
+  margin-top:20px;
+
+  color:var(--primary);
+
+  letter-spacing:6px;
+
+  font-size:12px;
+
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.member-profile{
+
+  display:grid;
+
+  grid-template-columns:
+    450px 1fr;
+
+  gap:70px;
+
+  align-items:center;
+
+}
+
+.profile-image{
+
+  position:relative;
+
+  overflow:hidden;
+
+  border-radius:40px;
+
+}
+
+.profile-image img{
+
+  width:100%;
+
+  height:650px;
+
+  object-fit:cover;
+
+}
+
+.profile-image span{
+
+  position:absolute;
+
+  left:20px;
+  bottom:20px;
+
+  background:#000;
+
+  color:#fff;
+
+  padding:10px 16px;
+
+  border-radius:30px;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+
+}
+
+.profile-info h2{
+
+  font-size:clamp(42px,4vw,70px);
+
+  margin-bottom:20px;
+
+}
+
+.profile-line{
+
+  width:120px;
+  height:4px;
+
+  background:var(--primary);
+
+  border-radius:30px;
+
+  margin-bottom:30px;
+
+}
+
+.profile-info blockquote{
+
+  font-size:clamp(20px,2vw,30px);
+
+  color:var(--primary);
+
+  font-style:italic;
+
+  margin-bottom:30px;
+
+}
+
+.profile-info p{
+
+  color:#d0d0d0;
+
+  line-height:2;
+
+  margin-bottom:40px;
+
+}
+
+/* =========================================================
+   META
+========================================================= */
+
+.profile-meta{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:20px;
+
+  margin-bottom:40px;
+
+}
+
+.profile-meta div{
+
+  background:#070707;
+
+  border:1px solid #141414;
+
+  border-radius:25px;
+
+  padding:25px;
+
+}
+
+.profile-meta small{
+
+  color:#888;
+
+  letter-spacing:2px;
+
+  font-size:10px;
+
+}
+
+.profile-meta h4{
+
+  margin-top:12px;
+
+  font-size:18px;
+
+}
+
+/* =========================================================
+   TAGS
+========================================================= */
+
+.profile-tags{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:12px;
+
+}
+
+.profile-tags span{
+
+  padding:
+    12px 18px;
+
+  border-radius:40px;
+
+  border:1px solid var(--primary);
+
+  color:var(--primary);
+
+  font-size:11px;
+
+  letter-spacing:2px;
+
+}
+
+/* =========================================================
+   DOSSIERS
+========================================================= */
+
+.dossier-section{
+
+  text-align:center;
+
+  padding-bottom:40px;
+
+}
+
+.dossier-section h2{
+
+  font-size:var(--title-lg);
+
+  margin-bottom:50px;
+
+}
+
+.dossier-section h2 span{
+  color:var(--primary);
+}
+
+.dossier-tabs{
+
+  display:flex;
+  justify-content:center;
+  gap:15px;
+
+  flex-wrap:wrap;
+
+}
+
+.dossier-btn{
+
+  border:none;
+
+  background:#070707;
+
+  color:#fff;
+
+  padding:
+    14px 24px;
+
+  border-radius:40px;
+
+  cursor:pointer;
+
+  letter-spacing:2px;
+
+  transition:.3s;
+
+}
+
+.dossier-btn.active{
+
+  background:var(--primary);
+
+  color:#000;
+
+}
+
+/* =========================================================
+   DOSSIER CONTENT
+========================================================= */
+
+.dossier-content{
+  display:none;
+}
+
+.dossier-content.active{
+  display:block;
+}
+
+.dossier-card{
+
+  background:#070707;
+
+  border:1px solid #141414;
+
+  border-radius:40px;
+
+  overflow:hidden;
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 400px;
+
+  gap:40px;
+
+  align-items:center;
+
+  padding:50px;
+
+}
+
+.dossier-text h3{
+
+  font-size:42px;
+
+  margin-bottom:25px;
+
+}
+
+.dossier-text p{
+
+  color:#d0d0d0;
+
+  line-height:2;
+
+}
+
+.dossier-image img{
+
+  width:100%;
+
+  border-radius:25px;
+
+}
+
+/* =========================================================
+   MILITARY
+========================================================= */
+
+.military-card{
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,255,102,.12),
+      rgba(0,255,102,.03)
+    );
+
+  border-radius:40px;
+
+  text-align:center;
+
+  padding:70px;
+
+}
+
+.military-card small{
+
+  letter-spacing:3px;
+
+  color:var(--primary);
+
+}
+
+.military-card h2{
+
+  font-size:clamp(50px,5vw,90px);
+
+  margin:20px 0;
+
+}
+
+.military-card p{
+
+  color:#d0d0d0;
+
+}
+
+.shield-icon{
+
+  margin-top:30px;
+
+  font-size:45px;
+
+  color:var(--primary);
+
+}
+
+/* =========================================================
+   VISUAL ARCHIVE
+========================================================= */
+
+.archive-title{
+
+  text-align:center;
+
+  margin-bottom:40px;
+
+  font-size:var(--title-md);
+
+}
+
+.archive-slider{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:20px;
+
+}
+
+.archive-prev,
+.archive-next{
+
+  width:60px;
+  height:60px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:#070707;
+
+  color:#fff;
+
+  cursor:pointer;
+
+}
+
+.archive-track{
+
+  flex:1;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:20px;
+
+}
+
+.archive-track img{
+
+  width:100%;
+
+  height:450px;
+
+  object-fit:cover;
+
+  border-radius:30px;
+
+}
+
+/* =========================================================
+   QUOTE
+========================================================= */
+
+.about-quote{
+
+  text-align:center;
+
+  padding-top:0;
+
+}
+
+.about-quote p{
+
+  font-size:clamp(26px,3vw,50px);
+
+  font-weight:700;
+
+  color:var(--primary);
+
+  letter-spacing:4px;
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+  .member-profile{
+    grid-template-columns:1fr;
+  }
+
+  .dossier-card{
+    grid-template-columns:1fr;
+  }
+
+  .profile-meta{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:768px){
+
+  .member-name{
+    font-size:80px;
+  }
+
+  .back-btn{
+    left:20px;
+    top:110px;
+  }
+
+  .profile-meta{
+    grid-template-columns:1fr;
+  }
+
+  .archive-track{
+    grid-template-columns:1fr;
+  }
+
+  .archive-track img{
+    height:350px;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .member-name{
+    font-size:60px;
+  }
+
+  .profile-image img{
+    height:500px;
+  }
+
+  .military-card{
+    padding:45px 25px;
+  }
+
+}
