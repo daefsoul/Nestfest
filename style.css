@@ -2440,7 +2440,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(20px, 3vw, 40px);
-  padding: 0 clamp(24px, 3vw, 40px) clamp(24px, 3vw, 40px);
+  padding: 0;
   max-height: 0;
   overflow: hidden;
   transition:
@@ -2670,6 +2670,20 @@ body {
    26. LORE RESPONSIVE
 ========================================================= */
 
+/* Fix: prevent subtitle from wrapping to a new row */
+.timeline-year-wrap {
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.timeline-year-wrap strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
 @media (max-width: 768px) {
   .intro-cards {
     grid-template-columns: 1fr;
@@ -2677,6 +2691,11 @@ body {
 
   .timeline-year-wrap {
     gap: 10px;
+  }
+
+  /* Hide subtitle on mobile — no space */
+  .timeline-year-wrap strong {
+    display: none;
   }
 
   .timeline-body {
@@ -2688,13 +2707,15 @@ body {
   }
 }
 
+@media (max-width: 600px) {
+  .timeline-top {
+    padding: 18px 20px;
+  }
+}
+
 @media (max-width: 500px) {
   .timeline-heading {
     gap: 14px;
-  }
-
-  .timeline-year-wrap strong {
-    display: none;
   }
 }
 
