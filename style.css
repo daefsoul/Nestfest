@@ -342,7 +342,7 @@ body {
 .lore-hero .hero-bg {
   background:
     linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.72)),
-    url("lore-bg.jpg") center center/cover no-repeat;
+    url("images/lore-bg.jpg") center center/cover no-repeat;
 }
 
 /* =========================================================
@@ -804,6 +804,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 32px;
+  align-items: start;
 }
 
 .album-card {
@@ -831,7 +832,7 @@ body {
 }
 
 .album-card::after {
-  content: "↗";
+  display: none;
   position: absolute;
   right: 20px;
   bottom: 22px;
@@ -868,9 +869,9 @@ body {
 .album-content {
   position: relative;
   background: #00d95c;
-  min-height: 120px;
   padding: 28px 24px;
   overflow: hidden;
+  min-height: 220px;
 }
 
 /* Curve effect */
@@ -907,7 +908,7 @@ body {
   color: #ffffff;
   font-weight: 700;
   text-transform: uppercase;
-  min-height: 58px;
+  min-height: 80px;
 }
 
 .album-content small {
@@ -2558,7 +2559,7 @@ body {
 }
 
 .album-card.active .tracklist {
-  max-height: 400px;
+    max-height: 1000px;
   opacity: 1;
   margin-top: 15px;
   padding-top: 20px;
@@ -2876,7 +2877,10 @@ body {
     min-height: 360px;
   }
   .album-image {
-    height: 240px;
+      width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #000;
   }
 
   /* Filmography */
