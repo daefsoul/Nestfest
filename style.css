@@ -276,8 +276,9 @@ body {
   background:
     linear-gradient(rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.86)),
     url("hero-bg.jpg") center center/cover no-repeat;
-  transform: scale(1.08);
-  animation: heroZoom 18s infinite alternate;
+  transform: none; /* buang scale yang cause overflow */
+    animation: none; /* stop heroZoom on mobile */
+    background-attachment: scroll !important;
 }
 
 .hero-overlay {
@@ -868,7 +869,7 @@ body {
 
 .album-content {
   position: relative;
-  background: #00d95c;
+  background: #0d0d0d;
   padding: 28px 24px;
   overflow: hidden;
   min-height: 220px;
@@ -882,7 +883,7 @@ body {
   top: -65px;
   width: 100%;
   height: 130px;
-  background: #00d95c;
+  background: #0d0d0d;
   border-radius: 0 0 50% 50%;
 }
 
@@ -895,8 +896,9 @@ body {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 30px;
-  background: rgba(0, 0, 0, 0.18);
-  color: #ffffff;
+  background: rgba(0, 255, 102, 0.12);
+  color: #00ff66;
+  border: 1px solid rgba(0, 255, 102, 0.25);
   font-size: 10px;
   letter-spacing: 2px;
   margin-bottom: 18px;
@@ -2807,6 +2809,9 @@ body {
   }
   .hero-title {
     line-height: 1;
+font-size: clamp(42px, 13vw, 80px);
+    overflow: hidden;
+    word-break: break-word;
   }
   .hero-desc {
     width: 100%;
@@ -2879,9 +2884,16 @@ body {
   .album-image {
       width: 100%;
   aspect-ratio: 1 / 1;
+  height: auto !important;  /* override height: 300px dari atas */
   overflow: hidden;
   background: #000;
-  }
+}
+
+.album-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
   /* Filmography */
   .film-grid {
