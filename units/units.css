@@ -628,3 +628,138 @@
 .jus2-theme .quote-line{
   background:#a855f7;
 }
+
+/* =========================================================
+   UNITS SECTION — ABOUT PAGE
+========================================================= */
+
+.about-units-section {
+  width: 100%;
+  max-width: 1500px;
+  margin: auto;
+  padding: 60px clamp(20px, 5vw, 90px) 80px;
+}
+
+.about-units-section .constellation-header {
+  padding-top: 0;
+  margin-bottom: 40px;
+}
+
+.about-units-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.about-unit-card {
+  position: relative;
+  height: 520px;
+  border-radius: 36px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: 0.4s ease;
+  display: block;
+}
+
+.about-unit-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.6s ease;
+}
+
+.about-unit-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0, 255, 102, 0.15);
+  border-color: rgba(0, 255, 102, 0.3);
+}
+
+.about-unit-card:hover img {
+  transform: scale(1.08);
+}
+
+.about-unit-card .unit-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92),
+    rgba(0, 0, 0, 0.2)
+  );
+  z-index: 1;
+}
+
+.about-unit-content {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 30px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-unit-content .unit-tag {
+  display: inline-block;
+  padding: 7px 14px;
+  background: rgba(0, 255, 102, 0.2);
+  border: 1px solid rgba(0, 255, 102, 0.35);
+  color: #00ff66;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  width: fit-content;
+}
+
+.about-unit-content small {
+  color: #cfcfcf;
+  font-style: italic;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-unit-content small i {
+  color: #00ff66;
+  font-size: 14px;
+}
+
+.about-unit-content h3 {
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.unit-view {
+  color: #00ff66;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.about-unit-card:hover .unit-view {
+  letter-spacing: 4px;
+}
+
+@media (max-width: 1000px) {
+  .about-units-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-unit-card {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-unit-card {
+    height: 360px;
+    border-radius: 28px;
+  }
+}
