@@ -396,24 +396,63 @@ ONLY ONE OPEN
      1.9  FILMOGRAPHY FILTER
   --------------------------------------------------------- */
 
-  const filmFilterBtns = document.querySelectorAll(".film-filter-btn");
-  const filmCards = document.querySelectorAll(".film-card");
+const filmFilterBtns = document.querySelectorAll(".film-filter-btn");
+const filmCards = document.querySelectorAll(".film-card");
 
-  filmFilterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filmFilterBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
+filmFilterBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    filmFilterBtns.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
 
-      const filter = btn.dataset.filter;
+    const filter = btn.dataset.filter;
 
-      filmCards.forEach((card) => {
-        card.style.display =
-          filter === "all" || card.dataset.category === filter
-            ? "block"
-            : "none";
-      });
+    filmCards.forEach((card) => {
+      if (filter === "all" || card.dataset.category === filter) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
     });
   });
+});
+
+  /* ---------------------------------------------------------
+   1.10  FILM MODAL
+--------------------------------------------------------- */
+
+document.querySelectorAll('.film-card[data-modal]').forEach(card => {
+  card.addEventListener('click', () => {
+    const modal = document.getElementById(card.dataset.modal);
+    if (modal) {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+});
+
+document.querySelectorAll('.film-modal').forEach(modal => {
+  modal.querySelector('.modal-close')?.addEventListener('click', () => {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+});
+
+// ESC key tutup modal
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.film-modal.active').forEach(modal => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  }
+});
 
   /* ---------------------------------------------------------
      1.10 AWARDS FILTER
