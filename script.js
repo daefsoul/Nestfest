@@ -345,6 +345,30 @@ ONLY ONE OPEN
     });
   });
 
+// AUTO FILTER FROM URL PARAM
+const urlParams = new URLSearchParams(window.location.search);
+const filterParam = urlParams.get('filter');
+
+if (filterParam) {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const albumCards = document.querySelectorAll('.album-card');
+
+  filterBtns.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.dataset.filter === filterParam) {
+      btn.classList.add('active');
+    }
+  });
+
+  albumCards.forEach(card => {
+    if (filterParam === 'all' || card.dataset.category === filterParam) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
   /* ---------------------------------------------------------
      1.7  LORE ACCORDION
   --------------------------------------------------------- */
