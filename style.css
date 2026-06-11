@@ -2863,16 +2863,21 @@ font-size: clamp(42px, 13vw, 80px);
 
   /* Discography */
   .discography-filter {
-    justify-content: flex-start;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    scrollbar-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    overflow-x: unset;
   }
   .discography-filter::-webkit-scrollbar {
     display: none;
   }
   .filter-btn {
     flex-shrink: 0;
+    white-space: nowrap;
+    padding: 10px 16px;
+    font-size: 10px;
   }
   .album-grid {
     grid-template-columns: 1fr 1fr;
@@ -2900,16 +2905,21 @@ font-size: clamp(42px, 13vw, 80px);
     grid-template-columns: 1fr;
   }
   .filmography-filter {
-    justify-content: flex-start;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    scrollbar-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    overflow-x: unset;
   }
   .filmography-filter::-webkit-scrollbar {
     display: none;
   }
   .film-filter-btn {
     flex-shrink: 0;
+    white-space: nowrap;
+    padding: 10px 16px;
+    font-size: 10px;
   }
   .modal-title-wrap {
     left: 28px;
