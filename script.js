@@ -195,24 +195,119 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------------------------------------------------------
-     1.8  DISCOGRAPHY FILTER
+     1.8  DISCOGRAPHY FILTER + FILTER PANEL (MERGED)
   --------------------------------------------------------- */
 
   const filterBtns = document.querySelectorAll(".filter-btn");
   const albumCards = document.querySelectorAll(".album-card");
 
-  filterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filterBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      const filter = btn.dataset.filter;
-      albumCards.forEach((card) => {
+  // Filter Panel elements
+  const filterPanel        = document.getElementById('filterPanel');
+  const filterPanelOverlay = document.getElementById('filterPanelOverlay');
+  const filterPanelToggle  = document.getElementById('filterPanelToggle');
+  const filterPanelClose   = document.getElementById('filterPanelClose');
+  const fpReset            = document.getElementById('fpReset');
+  const fpMemberSection    = document.getElementById('fpMemberSection');
+  const fpUnitSection      = document.getElementById('fpUnitSection');
+  const fpMixtape          = document.querySelector('.fp-mixtape');
+
+  let activeCategory = 'all';
+
+  // Open / close panel
+  function openFilterPanel() {
+    if (!filterPanel) return;
+    filterPanel.classList.add('active');
+    if (filterPanelOverlay) filterPanelOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFilterPanel() {
+    if (!filterPanel) return;
+    filterPanel.classList.remove('active');
+    if (filterPanelOverlay) filterPanelOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Show/hide panel sections based on category
+  function updatePanelSections(category) {
+    if (fpMemberSection) fpMemberSection.classList.add('fp-hidden');
+    if (fpUnitSection)   fpUnitSection.classList.add('fp-hidden');
+    if (fpMixtape)       fpMixtape.classList.add('fp-hidden');
+
+    if (category === 'solo' || category === 'ost') {
+      if (fpMemberSection) fpMemberSection.classList.remove('fp-hidden');
+      if (category === 'solo' && fpMixtape) fpMixtape.classList.remove('fp-hidden');
+    } else if (category === 'units') {
+      if (fpUnitSection) fpUnitSection.classList.remove('fp-hidden');
+    }
+  }
+
+  // Apply filter from panel
+  function applyPanelFilter() {
+    const selectedType   = document.querySelector('input[name="fp-type"]:checked')?.value || 'all';
+    const selectedMember = document.querySelector('input[name="fp-member"]:checked')?.value || 'all';
+    const selectedUnit   = document.querySelector('input[name="fp-unit"]:checked')?.value || 'all';
+
+    albumCards.forEach(card => {
+      const cardCategory = card.dataset.category;
+      const cardUnit     = card.dataset.unit || '';
+      const cardType     = card.querySelector('.album-type')?.textContent?.trim() || '';
+
+      // Category
+      if (activeCategory !== 'all' && cardCategory !== activeCategory) {
+        card.style.display = 'none'; return;
+      }
+      // Type
+      if (selectedType !== 'all' && cardType !== selectedType) {
+        card.style.display = 'none'; return;
+      }
+      // Member
+      if ((activeCategory === 'solo' || activeCategory === 'ost') && selectedMember !== 'all') {
+        if (cardUnit !== selectedMember) { card.style.display = 'none'; return; }
+      }
+      // Unit
+      if (activeCategory === 'units' && selectedUnit !== 'all') {
+        if (cardUnit !== selectedUnit) { card.style.display = 'none'; return; }
+      }
+
+      card.style.display = 'block';
+    });
+  }
+
+  // Reset panel radios & reapply
+  function resetPanel() {
+    const typeRadios = document.querySelectorAll('input[name="fp-type"]');
+    if (typeRadios.length) typeRadios[0].checked = true;
+    const memberFirst = document.querySelector('input[name="fp-member"]');
+    if (memberFirst) memberFirst.checked = true;
+    const unitFirst = document.querySelector('input[name="fp-unit"]');
+    if (unitFirst) unitFirst.checked = true;
+    applyPanelFilter();
+  }
+
+  // SINGLE listener for filter buttons — filter cards + open panel
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      activeCategory = btn.dataset.filter || 'all';
+
+      // Show cards for this category first
+      albumCards.forEach(card => {
         card.style.display =
-          filter === "all" || card.dataset.category === filter ? "block" : "none";
+          activeCategory === 'all' || card.dataset.category === activeCategory
+            ? 'block' : 'none';
       });
+
+      // Update panel sections and open
+      updatePanelSections(activeCategory);
+      resetPanel();
+      openFilterPanel();
     });
   });
 
+  // Tracklist toggle
   document.querySelectorAll(".tracklist-toggle").forEach((button) => {
     button.addEventListener("click", () => {
       const currentCard = button.closest(".album-card");
@@ -222,142 +317,17 @@ document.addEventListener("DOMContentLoaded", () => {
       currentCard.classList.toggle("active");
     });
   });
-  
-/* =========================================================
-   FILTER PANEL — tambah dalam script.js
-   dalam DOMContentLoaded, selepas section 1.8 (Discography Filter)
-========================================================= */
 
-/* ---------------------------------------------------------
-   1.8b  FILTER PANEL
---------------------------------------------------------- */
+  // Panel open/close buttons
+  if (filterPanelToggle) filterPanelToggle.addEventListener('click', openFilterPanel);
+  if (filterPanelClose)  filterPanelClose.addEventListener('click', closeFilterPanel);
+  if (filterPanelOverlay) filterPanelOverlay.addEventListener('click', closeFilterPanel);
+  if (fpReset) fpReset.addEventListener('click', resetPanel);
 
-const filterPanelToggle = document.getElementById('filterPanelToggle');
-const filterPanelClose  = document.getElementById('filterPanelClose');
-const filterPanel       = document.getElementById('filterPanel');
-const filterPanelOverlay = document.getElementById('filterPanelOverlay');
-const fpReset           = document.getElementById('fpReset');
-
-// Sections
-const fpTypeSection   = document.getElementById('fpTypeSection');
-const fpMemberSection = document.getElementById('fpMemberSection');
-const fpUnitSection   = document.getElementById('fpUnitSection');
-
-// Mixtape option — only show for SOLO
-const fpMixtape = document.querySelector('.fp-mixtape');
-
-// Current active category
-let activeCategory = 'all';
-
-// Open panel
-function openFilterPanel() {
-  filterPanel.classList.add('active');
-  filterPanelOverlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-// Close panel
-function closeFilterPanel() {
-  filterPanel.classList.remove('active');
-  filterPanelOverlay.classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-// Update panel sections based on active category
-function updatePanelSections(category) {
-  // Hide all optional sections first
-  fpMemberSection.classList.add('fp-hidden');
-  fpUnitSection.classList.add('fp-hidden');
-  if (fpMixtape) fpMixtape.classList.add('fp-hidden');
-
-  if (category === 'solo' || category === 'ost') {
-    fpMemberSection.classList.remove('fp-hidden');
-    if (category === 'solo' && fpMixtape) {
-      fpMixtape.classList.remove('fp-hidden');
-    }
-  } else if (category === 'units') {
-    fpUnitSection.classList.remove('fp-hidden');
-  }
-}
-
-// Apply filter based on panel selections
-function applyPanelFilter() {
-  const selectedType   = document.querySelector('input[name="fp-type"]:checked')?.value || 'all';
-  const selectedMember = document.querySelector('input[name="fp-member"]:checked')?.value || 'all';
-  const selectedUnit   = document.querySelector('input[name="fp-unit"]:checked')?.value || 'all';
-
-  albumCards.forEach(card => {
-    const cardCategory = card.dataset.category;
-    const cardUnit     = card.dataset.unit || '';
-    const cardType     = card.querySelector('.album-type')?.textContent?.trim() || '';
-
-    // Category match
-    if (activeCategory !== 'all' && cardCategory !== activeCategory) {
-      card.style.display = 'none';
-      return;
-    }
-
-    // Type match
-    if (selectedType !== 'all' && cardType !== selectedType) {
-      card.style.display = 'none';
-      return;
-    }
-
-    // Member match (solo/ost)
-    if ((activeCategory === 'solo' || activeCategory === 'ost') && selectedMember !== 'all') {
-      if (cardUnit !== selectedMember) {
-        card.style.display = 'none';
-        return;
-      }
-    }
-
-    // Unit match
-    if (activeCategory === 'units' && selectedUnit !== 'all') {
-      if (cardUnit !== selectedUnit) {
-        card.style.display = 'none';
-        return;
-      }
-    }
-
-    card.style.display = 'block';
+  // Radio auto-apply
+  document.querySelectorAll('input[name="fp-type"], input[name="fp-member"], input[name="fp-unit"]').forEach(radio => {
+    radio.addEventListener('change', applyPanelFilter);
   });
-}
-
-// Reset panel
-function resetPanel() {
-  document.querySelectorAll('input[name="fp-type"]')[0].checked = true;
-  const memberAll = document.querySelector('input[name="fp-member"]');
-  if (memberAll) memberAll.checked = true;
-  const unitAll = document.querySelector('input[name="fp-unit"]');
-  if (unitAll) unitAll.checked = true;
-  applyPanelFilter();
-}
-
-// Hook into existing filter buttons
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    activeCategory = btn.dataset.filter || 'all';
-    updatePanelSections(activeCategory);
-    resetPanel();
-    openFilterPanel();
-  });
-});
-
-// Panel events
-if (filterPanelToggle) filterPanelToggle.addEventListener('click', openFilterPanel);
-if (filterPanelClose)  filterPanelClose.addEventListener('click', closeFilterPanel);
-if (filterPanelOverlay) filterPanelOverlay.addEventListener('click', closeFilterPanel);
-if (fpReset) fpReset.addEventListener('click', resetPanel);
-
-// Radio change → auto apply
-document.querySelectorAll('input[name="fp-type"], input[name="fp-member"], input[name="fp-unit"]').forEach(radio => {
-  radio.addEventListener('change', applyPanelFilter);
-});
-
-// ESC tutup panel
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeFilterPanel();
-});
 
   /* ---------------------------------------------------------
      1.9  FILMOGRAPHY FILTER
@@ -539,7 +509,7 @@ document.addEventListener('keydown', e => {
   const PAGE_LAYOUTS = [9, 8, 8];
 
   const GRID_POSITIONS = {
-    0: [ // Page 1 — 9 kotak
+    0: [
       { col: '1 / 3', row: '1 / 3' },
       { col: '3 / 5', row: '1' },
       { col: '3 / 5', row: '2' },
@@ -550,7 +520,7 @@ document.addEventListener('keydown', e => {
       { col: '2',     row: '4' },
       { col: '3 / 5', row: '4' },
     ],
-    1: [ // Page 2 — 8 kotak
+    1: [
       { col: '1 / 3', row: '1' },
       { col: '3 / 5', row: '1' },
       { col: '1',     row: '2' },
@@ -560,7 +530,7 @@ document.addEventListener('keydown', e => {
       { col: '3 / 5', row: '3' },
       { col: '3 / 5', row: '4' },
     ],
-    2: [ // Page 3 — 8 kotak
+    2: [
       { col: '1 / 3', row: '1' },
       { col: '3 / 5', row: '1 / 3' },
       { col: '1 / 3', row: '2' },
@@ -596,25 +566,19 @@ document.addEventListener('keydown', e => {
   function renderPage(pageIndex, pages) {
     const pageEls = document.querySelectorAll('.popup-page');
     if (!pageEls.length) return;
-
     pageEls.forEach((el, i) => {
       el.classList.remove('active');
       el.innerHTML = '';
-
       const imgs = pages[i] || [];
       const maxSlots = PAGE_LAYOUTS[i];
       const positions = GRID_POSITIONS[i] || [];
-
       for (let s = 0; s < maxSlots; s++) {
         const div = document.createElement('div');
         div.className = 'pg-img';
-
-        // Assign grid position
         if (positions[s]) {
           div.style.gridColumn = positions[s].col;
           div.style.gridRow = positions[s].row;
         }
-
         if (imgs[s]) {
           const img = document.createElement('img');
           img.src = imgs[s];
@@ -625,11 +589,9 @@ document.addEventListener('keydown', e => {
         } else {
           div.classList.add('empty');
         }
-
         el.appendChild(div);
       }
     });
-
     pageEls[pageIndex]?.classList.add('active');
   }
 
@@ -698,12 +660,10 @@ document.addEventListener('keydown', e => {
     if (viewer) viewer.classList.remove('active');
   }
 
-  // Gallery cards click
   document.querySelectorAll('.gallery-card[data-collection]').forEach(card => {
     card.addEventListener('click', () => openGalleryPopup(card.dataset.collection));
   });
 
-  // Popup close
   const popupCloseBtn = document.getElementById('popup-close-btn');
   if (popupCloseBtn) popupCloseBtn.addEventListener('click', closeGalleryPopup);
 
@@ -714,13 +674,11 @@ document.addEventListener('keydown', e => {
     });
   }
 
-  // Nav buttons
   const popupPrev = document.getElementById('popup-prev');
   const popupNext = document.getElementById('popup-next');
   if (popupPrev) popupPrev.addEventListener('click', prevPopupPage);
   if (popupNext) popupNext.addEventListener('click', nextPopupPage);
 
-  // Dots
   document.querySelectorAll('.popup-dot').forEach((dot, i) => {
     dot.addEventListener('click', () => {
       currentPage = i;
@@ -729,7 +687,6 @@ document.addEventListener('keydown', e => {
     });
   });
 
-  // Image viewer
   const imgViewerClose = document.getElementById('img-viewer-close');
   const imgViewer = document.getElementById('img-viewer');
   if (imgViewerClose) imgViewerClose.addEventListener('click', closeViewer);
@@ -741,7 +698,7 @@ document.addEventListener('keydown', e => {
 
   // ESC + Arrow keys
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeViewer(); closeGalleryPopup(); }
+    if (e.key === 'Escape') { closeViewer(); closeGalleryPopup(); closeFilterPanel(); }
     if (e.key === 'ArrowRight') nextPopupPage();
     if (e.key === 'ArrowLeft') prevPopupPage();
   });
