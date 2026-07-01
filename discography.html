@@ -133,7 +133,132 @@
       </button>
 
     </div>
+    
+<!-- =========================================================
+     FILTER PANEL — tambah dalam discography.html
+     letak selepas </div> yang tutup .discography-filter
+     dan sebelum <div class="album-grid">
+========================================================= -->
 
+<!-- FILTER TOGGLE BUTTON -->
+<button class="filter-panel-toggle" id="filterPanelToggle">
+  <i class="ri-equalizer-line"></i>
+  FILTER
+</button>
+
+<!-- FILTER PANEL OVERLAY -->
+<div class="filter-panel-overlay" id="filterPanelOverlay"></div>
+
+<!-- FILTER PANEL -->
+<div class="filter-panel" id="filterPanel">
+
+  <div class="filter-panel-header">
+    <span>FILTER</span>
+    <button class="filter-panel-close" id="filterPanelClose">
+      <i class="ri-close-line"></i>
+    </button>
+  </div>
+
+  <!-- TYPE -->
+  <div class="filter-panel-section" id="fpTypeSection">
+    <h4>TYPE</h4>
+    <div class="fp-options" id="fpTypeOptions">
+      <label class="fp-option">
+        <input type="radio" name="fp-type" value="all" checked>
+        <span>All</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-type" value="Full Album">
+        <span>Full Album</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-type" value="Mini Album">
+        <span>Mini Album</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-type" value="Single">
+        <span>Single</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-type" value="Special Album">
+        <span>Special Album</span>
+      </label>
+      <label class="fp-option fp-mixtape">
+        <input type="radio" name="fp-type" value="Mixtape">
+        <span>Mixtape</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- MEMBER — untuk SOLO & OST -->
+  <div class="filter-panel-section fp-hidden" id="fpMemberSection">
+    <h4>MEMBER</h4>
+    <div class="fp-options">
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="all" checked>
+        <span>All Members</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="jayb">
+        <span>Jay B</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="mark">
+        <span>Mark</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="jackson">
+        <span>Jackson</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="jinyoung">
+        <span>Jinyoung</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="youngjae">
+        <span>Youngjae</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="bambam">
+        <span>BamBam</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-member" value="yugyeom">
+        <span>Yugyeom</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- UNIT — untuk UNITS -->
+  <div class="filter-panel-section fp-hidden" id="fpUnitSection">
+    <h4>UNIT</h4>
+    <div class="fp-options">
+      <label class="fp-option">
+        <input type="radio" name="fp-unit" value="all" checked>
+        <span>All Units</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-unit" value="jjproject">
+        <span>JJ Project</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-unit" value="jus2">
+        <span>Jus2</span>
+      </label>
+      <label class="fp-option">
+        <input type="radio" name="fp-unit" value="atk">
+        <span>ATK</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- RESET -->
+  <button class="fp-reset" id="fpReset">
+    <i class="ri-refresh-line"></i>
+    RESET FILTER
+  </button>
+
+</div>
 
     <!-- =========================================================
        ALBUM GRID
