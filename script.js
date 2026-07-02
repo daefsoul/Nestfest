@@ -195,13 +195,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------------------------------------------------------
-     1.8  DISCOGRAPHY FILTER + FILTER PANEL (MERGED)
+     1.8  DISCOGRAPHY FILTER + FILTER PANEL
   --------------------------------------------------------- */
 
-  const filterBtns = document.querySelectorAll(".filter-btn");
-  const albumCards = document.querySelectorAll(".album-card");
+  const filterBtns  = document.querySelectorAll(".filter-btn");
+  const albumCards  = document.querySelectorAll(".album-card");
 
-  // Filter Panel elements
+  // Group categories — old data-category values yang map ke GROUP
+  const GROUP_CATEGORIES = ['korean', 'japanese', 'chinese'];
+
+  // Filter panel elements
   const filterPanel        = document.getElementById('filterPanel');
   const filterPanelOverlay = document.getElementById('filterPanelOverlay');
   const filterPanelToggle  = document.getElementById('filterPanelToggle');
@@ -209,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const fpReset            = document.getElementById('fpReset');
   const fpMemberSection    = document.getElementById('fpMemberSection');
   const fpUnitSection      = document.getElementById('fpUnitSection');
-  const fpMixtape          = document.querySelector('.fp-mixtape');
+  const fpLanguageSection  = document.getElementById('fpLanguageSection');
 
   let activeCategory = 'all';
 
@@ -228,64 +231,100 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = '';
   }
 
-  // Show/hide panel sections based on category
+  // Update which sections visible in panel
   function updatePanelSections(category) {
-    if (fpMemberSection) fpMemberSection.classList.add('fp-hidden');
-    if (fpUnitSection)   fpUnitSection.classList.add('fp-hidden');
-    if (fpMixtape)       fpMixtape.classList.add('fp-hidden');
+    // Default — hide language, member, unit
+    if (fpLanguageSection) fpLanguageSection.classList.add('fp-hidden');
+    if (fpMemberSection)   fpMemberSection.classList.add('fp-hidden');
+    if (fpUnitSection)     fpUnitSection.classList.add('fp-hidden');
 
-    if (category === 'solo' || category === 'ost') {
+    if (category === 'group') {
+      // Show language only
+      if (fpLanguageSection) fpLanguageSection.classList.remove('fp-hidden');
+    } else if (category === 'solo' || category === 'ost') {
+      // Show member only
       if (fpMemberSection) fpMemberSection.classList.remove('fp-hidden');
-      if (category === 'solo' && fpMixtape) fpMixtape.classList.remove('fp-hidden');
-    } else if (category === 'units') {
+    } else if (category === 'unit') {
+      // Show unit only
       if (fpUnitSection) fpUnitSection.classList.remove('fp-hidden');
     }
+    // 'all' — show nothing extra, just type
   }
 
-  // Apply filter from panel
-  function applyPanelFilter() {
-    const selectedType   = document.querySelector('input[name="fp-type"]:checked')?.value || 'all';
-    const selectedMember = document.querySelector('input[name="fp-member"]:checked')?.value || 'all';
-    const selectedUnit   = document.querySelector('input[name="fp-unit"]:checked')?.value || 'all';
+  // Main filter logic
+  function applyFilter() {
+    const selectedType     = document.querySelector('input[name="fp-type"]:checked')?.value || 'all';
+    const selectedLanguage = document.querySelector('input[name="fp-language"]:checked')?.value || 'all';
+    const selectedMember   = document.querySelector('input[name="fp-member"]:checked')?.value || 'all';
+    const selectedUnit     = document.querySelector('input[name="fp-unit"]:checked')?.value || 'all';
 
     albumCards.forEach(card => {
-      const cardCategory = card.dataset.category;
+      const cardCategory = card.dataset.category; // korean/japanese/chinese/solo/units/ost
       const cardUnit     = card.dataset.unit || '';
       const cardType     = card.querySelector('.album-type')?.textContent?.trim() || '';
 
-      // Category
-      if (activeCategory !== 'all' && cardCategory !== activeCategory) {
-        card.style.display = 'none'; return;
+      // --- CATEGORY CHECK ---
+      if (activeCategory !== 'all') {
+        if (activeCategory === 'group') {
+          // group = korean + japanese + chinese
+          if (!GROUP_CATEGORIES.includes(cardCategory)) {
+            card.style.display = 'none'; return;
+          }
+        } else if (activeCategory === 'unit') {
+          if (cardCategory !== 'units') {
+            card.style.display = 'none'; return;
+          }
+        } else {
+          // solo / ost
+          if (cardCategory !== activeCategory) {
+            card.style.display = 'none'; return;
+          }
+        }
       }
-      // Type
+
+      // --- TYPE CHECK ---
       if (selectedType !== 'all' && cardType !== selectedType) {
         card.style.display = 'none'; return;
       }
-      // Member
-      if ((activeCategory === 'solo' || activeCategory === 'ost') && selectedMember !== 'all') {
-        if (cardUnit !== selectedMember) { card.style.display = 'none'; return; }
+
+      // --- LANGUAGE CHECK (group only) ---
+      if (activeCategory === 'group' && selectedLanguage !== 'all') {
+        if (cardCategory !== selectedLanguage) {
+          card.style.display = 'none'; return;
+        }
       }
-      // Unit
-      if (activeCategory === 'units' && selectedUnit !== 'all') {
-        if (cardUnit !== selectedUnit) { card.style.display = 'none'; return; }
+
+      // --- MEMBER CHECK (solo/ost) ---
+      if ((activeCategory === 'solo' || activeCategory === 'ost') && selectedMember !== 'all') {
+        if (cardUnit !== selectedMember) {
+          card.style.display = 'none'; return;
+        }
+      }
+
+      // --- UNIT CHECK ---
+      if (activeCategory === 'unit' && selectedUnit !== 'all') {
+        if (cardUnit !== selectedUnit) {
+          card.style.display = 'none'; return;
+        }
       }
 
       card.style.display = 'block';
     });
   }
 
-  // Reset panel radios & reapply
+  // Reset all radios and reapply
   function resetPanel() {
-    const typeRadios = document.querySelectorAll('input[name="fp-type"]');
-    if (typeRadios.length) typeRadios[0].checked = true;
+    document.querySelectorAll('input[name="fp-type"]')[0].checked     = true;
+    const langFirst   = document.querySelector('input[name="fp-language"]');
     const memberFirst = document.querySelector('input[name="fp-member"]');
+    const unitFirst   = document.querySelector('input[name="fp-unit"]');
+    if (langFirst)   langFirst.checked   = true;
     if (memberFirst) memberFirst.checked = true;
-    const unitFirst = document.querySelector('input[name="fp-unit"]');
-    if (unitFirst) unitFirst.checked = true;
-    applyPanelFilter();
+    if (unitFirst)   unitFirst.checked   = true;
+    applyFilter();
   }
 
-  // SINGLE listener for filter buttons — filter cards + open panel
+  // Filter button click — set category, update panel, open panel
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
@@ -293,17 +332,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       activeCategory = btn.dataset.filter || 'all';
 
-      // Show cards for this category first
-      albumCards.forEach(card => {
-        card.style.display =
-          activeCategory === 'all' || card.dataset.category === activeCategory
-            ? 'block' : 'none';
-      });
-
-      // Update panel sections and open
       updatePanelSections(activeCategory);
       resetPanel();
-      openFilterPanel();
+
+      // Only open panel if not "all"
+      if (activeCategory !== 'all') {
+        openFilterPanel();
+      }
     });
   });
 
@@ -318,15 +353,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Panel open/close buttons
+  // Panel buttons
   if (filterPanelToggle) filterPanelToggle.addEventListener('click', openFilterPanel);
   if (filterPanelClose)  filterPanelClose.addEventListener('click', closeFilterPanel);
   if (filterPanelOverlay) filterPanelOverlay.addEventListener('click', closeFilterPanel);
-  if (fpReset) fpReset.addEventListener('click', resetPanel);
+  if (fpReset) fpReset.addEventListener('click', () => { resetPanel(); });
 
   // Radio auto-apply
-  document.querySelectorAll('input[name="fp-type"], input[name="fp-member"], input[name="fp-unit"]').forEach(radio => {
-    radio.addEventListener('change', applyPanelFilter);
+  document.querySelectorAll('input[name="fp-type"], input[name="fp-language"], input[name="fp-member"], input[name="fp-unit"]').forEach(radio => {
+    radio.addEventListener('change', applyFilter);
   });
 
   /* ---------------------------------------------------------
@@ -469,22 +504,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const filterParam = urlParams.get('filter');
-  const unitParam = urlParams.get('unit');
+  const unitParam   = urlParams.get('unit');
 
   if (filterParam) {
+    // Map old params to new category buttons
+    const categoryMap = {
+      'korean': 'group', 'japanese': 'group', 'chinese': 'group',
+      'units': 'unit', 'solo': 'solo', 'ost': 'ost', 'all': 'all'
+    };
+    const mappedFilter = categoryMap[filterParam] || filterParam;
+
     filterBtns.forEach(btn => {
       btn.classList.remove('active');
-      if (btn.dataset.filter === filterParam) btn.classList.add('active');
+      if (btn.dataset.filter === mappedFilter) btn.classList.add('active');
     });
+
+    activeCategory = mappedFilter;
+
     albumCards.forEach(card => {
       if (filterParam === 'all') {
         card.style.display = 'block';
       } else if (unitParam) {
         card.style.display = card.dataset.unit === unitParam ? 'block' : 'none';
+      } else if (GROUP_CATEGORIES.includes(filterParam)) {
+        card.style.display = card.dataset.category === filterParam ? 'block' : 'none';
       } else {
         card.style.display = card.dataset.category === filterParam ? 'block' : 'none';
       }
     });
+
     const albumSection = document.querySelector('.album-grid');
     if (albumSection) {
       setTimeout(() => {
@@ -510,35 +558,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const GRID_POSITIONS = {
     0: [
-      { col: '1 / 3', row: '1 / 3' },
-      { col: '3 / 5', row: '1' },
-      { col: '3 / 5', row: '2' },
-      { col: '1 / 3', row: '3' },
-      { col: '3',     row: '3' },
-      { col: '4',     row: '3' },
-      { col: '1',     row: '4' },
-      { col: '2',     row: '4' },
+      { col: '1 / 3', row: '1 / 3' }, { col: '3 / 5', row: '1' },
+      { col: '3 / 5', row: '2' },     { col: '1 / 3', row: '3' },
+      { col: '3',     row: '3' },     { col: '4',     row: '3' },
+      { col: '1',     row: '4' },     { col: '2',     row: '4' },
       { col: '3 / 5', row: '4' },
     ],
     1: [
-      { col: '1 / 3', row: '1' },
-      { col: '3 / 5', row: '1' },
-      { col: '1',     row: '2' },
-      { col: '2',     row: '2' },
-      { col: '3 / 5', row: '2' },
-      { col: '1 / 3', row: '3 / 5' },
-      { col: '3 / 5', row: '3' },
-      { col: '3 / 5', row: '4' },
+      { col: '1 / 3', row: '1' },     { col: '3 / 5', row: '1' },
+      { col: '1',     row: '2' },     { col: '2',     row: '2' },
+      { col: '3 / 5', row: '2' },     { col: '1 / 3', row: '3 / 5' },
+      { col: '3 / 5', row: '3' },     { col: '3 / 5', row: '4' },
     ],
     2: [
-      { col: '1 / 3', row: '1' },
-      { col: '3 / 5', row: '1 / 3' },
-      { col: '1 / 3', row: '2' },
-      { col: '1',     row: '3' },
-      { col: '2',     row: '3' },
-      { col: '3 / 5', row: '3' },
-      { col: '1 / 3', row: '4' },
-      { col: '3 / 5', row: '4' },
+      { col: '1 / 3', row: '1' },     { col: '3 / 5', row: '1 / 3' },
+      { col: '1 / 3', row: '2' },     { col: '1',     row: '3' },
+      { col: '2',     row: '3' },     { col: '3 / 5', row: '3' },
+      { col: '1 / 3', row: '4' },     { col: '3 / 5', row: '4' },
     ],
   };
 
@@ -577,13 +613,11 @@ document.addEventListener("DOMContentLoaded", () => {
         div.className = 'pg-img';
         if (positions[s]) {
           div.style.gridColumn = positions[s].col;
-          div.style.gridRow = positions[s].row;
+          div.style.gridRow    = positions[s].row;
         }
         if (imgs[s]) {
           const img = document.createElement('img');
-          img.src = imgs[s];
-          img.alt = '';
-          img.loading = 'lazy';
+          img.src = imgs[s]; img.alt = ''; img.loading = 'lazy';
           img.addEventListener('click', () => openViewer(imgs[s]));
           div.appendChild(img);
         } else {
@@ -599,7 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const prevBtn = document.getElementById('popup-prev');
     const nextBtn = document.getElementById('popup-next');
     const counter = document.getElementById('popup-counter');
-    const dots = document.querySelectorAll('.popup-dot');
+    const dots    = document.querySelectorAll('.popup-dot');
     if (!prevBtn || !nextBtn) return;
     prevBtn.disabled = currentPage === 0;
     nextBtn.disabled = currentPage === PAGE_LAYOUTS.length - 1;
@@ -614,16 +648,13 @@ document.addEventListener("DOMContentLoaded", () => {
     currentImages = buildImages(collection);
     const pages = splitIntoPages(currentImages);
     const titleEl = document.getElementById('popup-collection-title');
-    const yearEl = document.getElementById('popup-collection-year');
+    const yearEl  = document.getElementById('popup-collection-year');
     if (titleEl) titleEl.textContent = collection.title;
-    if (yearEl) yearEl.textContent = collection.year;
+    if (yearEl)  yearEl.textContent  = collection.year;
     renderPage(currentPage, pages);
     updatePopupNav();
     const popup = document.getElementById('gallery-popup');
-    if (popup) {
-      popup.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+    if (popup) { popup.classList.add('active'); document.body.style.overflow = 'hidden'; }
   }
 
   function closeGalleryPopup() {
@@ -648,7 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openViewer(src) {
-    const viewer = document.getElementById('img-viewer');
+    const viewer    = document.getElementById('img-viewer');
     const viewerImg = document.getElementById('img-viewer-img');
     if (!viewer || !viewerImg) return;
     viewerImg.src = src;
@@ -667,10 +698,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupCloseBtn = document.getElementById('popup-close-btn');
   if (popupCloseBtn) popupCloseBtn.addEventListener('click', closeGalleryPopup);
 
-  const galleryPopup = document.getElementById('gallery-popup');
-  if (galleryPopup) {
-    galleryPopup.addEventListener('click', (e) => {
-      if (e.target === galleryPopup) closeGalleryPopup();
+  const galleryPopupEl = document.getElementById('gallery-popup');
+  if (galleryPopupEl) {
+    galleryPopupEl.addEventListener('click', (e) => {
+      if (e.target === galleryPopupEl) closeGalleryPopup();
     });
   }
 
@@ -688,7 +719,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const imgViewerClose = document.getElementById('img-viewer-close');
-  const imgViewer = document.getElementById('img-viewer');
+  const imgViewer      = document.getElementById('img-viewer');
   if (imgViewerClose) imgViewerClose.addEventListener('click', closeViewer);
   if (imgViewer) {
     imgViewer.addEventListener('click', (e) => {
@@ -696,11 +727,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ESC + Arrow keys
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') { closeViewer(); closeGalleryPopup(); closeFilterPanel(); }
     if (e.key === 'ArrowRight') nextPopupPage();
-    if (e.key === 'ArrowLeft') prevPopupPage();
+    if (e.key === 'ArrowLeft')  prevPopupPage();
   });
 
 }); // end DOMContentLoaded
